@@ -1,14 +1,14 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
-import Home from "../views/Home.vue";
+import MainMenu from "../views/MainMenu.vue";
 
 Vue.use(VueRouter);
 
 const routes = [
   {
     path: "/",
-    name: "Home",
-    component: Home
+    name: "MainMenu",
+    component: MainMenu
   },
   {
     path: "/about",
@@ -18,12 +18,36 @@ const routes = [
     // which is lazy-loaded when the route is visited.
     component: () =>
       import(/* webpackChunkName: "about" */ "../views/About.vue")
+  },
+  {
+    path: "/level",
+    name: "LevelSelection",
+    component: () => import("../views/LevelSelection")
+  },
+  {
+    path: "/sandbox",
+    name: "Sandbox",
+    component: () => import("../views/Sandbox")
+  },
+  {
+    path: "/game",
+    name: "Game",
+    component: () => import("../views/TrailRunner")
+  },
+  {
+    path: "/lose",
+    name: "Lose",
+    component: () => import("../views/LoseScreen")
+  },
+  {
+    path: "/win",
+    name: "Win",
+    component: () => import("../views/WinScreen")
   }
 ];
 
 const router = new VueRouter({
   mode: "history",
-  base: process.env.BASE_URL,
   routes
 });
 
