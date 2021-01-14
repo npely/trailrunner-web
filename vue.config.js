@@ -1,7 +1,7 @@
 module.exports = {
   transpileDependencies: ["vuetify"],
   devServer: {
-    https: true
+    https: false
   },
   pwa: {
     name: "TrailRunner",

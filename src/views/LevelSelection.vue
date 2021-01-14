@@ -45,6 +45,24 @@
         Level 5
       </button>
     </v-row>
+    <v-row>
+      <button
+        class="menu-button-white"
+        id="selectLevel6"
+        @click="executeFetchLevel(6)"
+      >
+        Level 6
+      </button>
+    </v-row>
+    <v-row>
+      <button
+        class="menu-button-white"
+        id="selectLevel7"
+        @click="executeFetchLevel(7)"
+      >
+        Level 7
+      </button>
+    </v-row>
   </v-container>
 </template>
 

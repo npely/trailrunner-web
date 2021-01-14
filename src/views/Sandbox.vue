@@ -258,11 +258,12 @@ export default {
           }
           fields.push({
             fieldvalue: value,
-            fieldtype: type
+            fieldtype: type,
+            fog: false
           });
           if (params.length > 2) {
-            pXPos = x;
-            pYPos = y;
+            pXPos = y;
+            pYPos = x;
           }
         }
       }
@@ -280,6 +281,7 @@ export default {
         level: levelObj,
         fields: fields
       };
+      console.log("THIS IS THE LEVEL");
       console.log(level);
       this.postCustomGame({ level });
     },

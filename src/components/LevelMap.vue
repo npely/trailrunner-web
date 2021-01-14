@@ -28,7 +28,8 @@ export default {
           this.changedFields.playerField.fieldtype,
           this.changedFields.playerY.toString() +
             this.changedFields.playerX.toString(),
-          false
+          false,
+          this.changedFields.playerField.fog
         );
         this.updateField(
           newPlayerField,
@@ -36,7 +37,8 @@ export default {
           this.changedFields.newPlayerField.fieldtype,
           this.changedFields.newPlayerY.toString() +
             this.changedFields.newPlayerX.toString(),
-          true
+          true,
+          this.changedFields.playerField.fog
         );
         setTimeout(function() {
           router.push("lose");
@@ -52,7 +54,8 @@ export default {
           this.changedFields.playerField.fieldtype,
           this.changedFields.playerY.toString() +
             this.changedFields.playerX.toString(),
-          false
+          false,
+          this.changedFields.playerField.fog
         );
         this.updateField(
           doorFieldCol,
@@ -60,7 +63,8 @@ export default {
           "Door",
           this.changedFields.doorY.toString() +
             this.changedFields.doorX.toString(),
-          true
+          true,
+          this.changedFields.newPlayerField.fog
         );
         setTimeout(function() {
           router.push("win");
@@ -73,7 +77,8 @@ export default {
           this.changedFields.newPlayerField.fieldtype,
           this.changedFields.newPlayerY.toString() +
             this.changedFields.newPlayerX.toString(),
-          true
+          true,
+          this.changedFields.newPlayerField.fog
         );
       }
       this.updateField(
@@ -82,7 +87,8 @@ export default {
         this.changedFields.playerField.fieldtype,
         this.changedFields.playerY.toString() +
           this.changedFields.playerX.toString(),
-        false
+        false,
+        this.changedFields.playerField.fog
       );
       if (this.changedFields.levelFieldSum === 0) {
         this.updateField(
@@ -91,6 +97,7 @@ export default {
           this.changedFields.doorField.fieldtype,
           this.changedFields.doorY.toString() +
             this.changedFields.doorX.toString(),
+          false,
           false
         );
       } else {
@@ -100,6 +107,7 @@ export default {
           this.changedFields.doorField.fieldtype,
           this.changedFields.doorY.toString() +
             this.changedFields.doorX.toString(),
+          false,
           false
         );
       }
@@ -110,26 +118,61 @@ export default {
     walk: function(moveDirection) {
       this.makeMove({ moveDirection });
     },
-    updateField: function(parent, fieldValue, fieldType, xy, isPlayerOnField) {
+    updateField: function(
+      parent,
+      fieldValue,
+      fieldType,
+      xy,
+      isPlayerOnField,
+      fog
+    ) {
       let image = document.getElementById(`img-${xy}`);
       image.src = require("@/assets/" +
-        this.setFieldImage(parent, fieldValue, fieldType, isPlayerOnField));
+        this.setFieldImage(
+          parent,
+          fieldValue,
+          fieldType,
+          isPlayerOnField,
+          fog
+        ));
     },
-    buildField: function(parent, fieldValue, fieldType, xy, isPlayerOnField) {
+    buildField: function(
+      parent,
+      fieldValue,
+      fieldType,
+      xy,
+      isPlayerOnField,
+      fog
+    ) {
       let image = document.createElement("img");
       image.src = require("@/assets/" +
-        this.setFieldImage(parent, fieldValue, fieldType, isPlayerOnField));
+        this.setFieldImage(
+          parent,
+          fieldValue,
+          fieldType,
+          isPlayerOnField,
+          fog
+        ));
       image.classList.add("game-field");
       image.id = "img-" + xy;
       parent.append(image);
     },
-    setFieldImage: function(parent, fieldValue, fieldType, isPlayerOnField) {
+    setFieldImage: function(
+      parent,
+      fieldValue,
+      fieldType,
+      isPlayerOnField,
+      fog
+    ) {
       let myPicture = "images/fields/";
       if (fieldValue >= -20 && fieldValue <= 20) {
         if (fieldType === "Door" || !isPlayerOnField) {
-          myPicture += fieldType + "_" + fieldValue + ".png";
+          if (fog) {
+            myPicture += fieldType + "_" + "Fog" + ".png";
+          } else {
+            myPicture += fieldType + "_" + fieldValue + ".png";
+          }
         } else {
-          console.log("is player field");
           myPicture += fieldType + "_" + fieldValue + "_P.png";
         }
       } else {
@@ -147,6 +190,8 @@ export default {
     }
   },
   mounted: function() {
+    console.log("IN LEVELMAP NOW");
+    console.log(this.levelMap);
     let parent = document.getElementById("level-map");
     for (let x = 0; x < 10; x++) {
       let row = document.createElement("div");
@@ -162,22 +207,13 @@ export default {
         row.append(col);
         let field = this.levelMap.fields[x * 10 + y];
         let xy = x.toString() + y.toString();
-        console.log(
-          "PxPos " +
-            this.levelMap.level.PxPos +
-            " PyPos " +
-            this.levelMap.level.PyPos
-        );
-        console.log(x + " " + y);
-        console.log(
-          this.levelMap.level.PxPos === y && this.levelMap.level.PyPos === x
-        );
         this.buildField(
           col,
           field.fieldvalue,
           field.fieldtype,
           xy,
-          this.levelMap.level.PxPos === y && this.levelMap.level.PyPos === x
+          this.levelMap.level.PxPos === y && this.levelMap.level.PyPos === x,
+          field.fog
         );
       }
     }
